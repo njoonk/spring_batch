@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="project" default="sendZipFile">
+
+    <description>Server in java</description>
+
+    <target name="sendZipFile" description="Send Zip to tomcat server">
+		<!-- Delete the ROOT Folder -->
+    	<sshexec
+    		host="xxx.xxx.xxx.xxx"
+    		username="cy_tomcat"
+			keyfile="id_rsa"
+			trust="true"
+    		command="rm /usr/local/app/sampleBatch-archive.zip" />
+
+    	<sshexec
+    		host="xxx.xxx.xxx.xxx"
+    		username="cy_tomcat"
+			keyfile="id_rsa"
+			trust="true"
+    		command="rm -rf /usr/local/app/sampleBatch/bin/* /usr/local/app/sampleBatch/lib/*" />
+
+		<!-- Copy the bin.jar to the server -->
+    	<scp
+    		file="target/sampleBatch-archive.zip"
+    		todir="cy_tomcat@xxx.xxx.xxx.xxx:"
+			keyfile="id_rsa"
+    		verbose="true"
+    		passphrase="" trust="true"/>
+
+		<!-- Move the ROOT.Zip to the Webapp Folder -->
+
+    	<sshexec
+    		host="xxx.xxx.xxx.xxx"
+    		username="cy_tomcat"
+			keyfile="id_rsa"
+			trust="true"
+    		command="mv sampleBatch-archive.zip /usr/local/app/" />
+    	<sshexec
+    		host="xxx.xxx.xxx.xxx"
+    		username="cy_tomcat"
+			keyfile="id_rsa"
+			trust="true"
+    		command="unzip -o /usr/local/app/sampleBatch-archive.zip -d /usr/local/app/" />
+    	<sshexec
+    		host="xxx.xxx.xxx.xxx"
+    		username="cy_tomcat"
+			keyfile="id_rsa"
+			trust="true"
+    		command="mv /usr/local/app/sampleBatch/sampleBatch.jar /usr/local/app/sampleBatch/bin/" />
+
+    	<sshexec
+    		host="xxx.xxx.xxx.xxx"
+    		username="cy_tomcat"
+			keyfile="id_rsa"
+			trust="true"
+    		command="cd /usr/local/app/sampleBatch/bin/;/usr/local/java/bin/jar xvf /usr/local/app/sampleBatch/bin/sampleBatch.jar" />
+
+    </target>
+
+</project>
